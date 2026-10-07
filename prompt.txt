@@ -1,0 +1,153 @@
+Main Laravel seekh raha hoon aur basic CRUD + Authentication samajh chuka hoon. Ab mujhe production-level Laravel development step-by-step sikhni hai.
+
+Mere current project mein ye roles hain:
+
+admin
+
+ngo
+
+inspector
+
+Mere project mein abhi:
+
+User registration/login/logout bana hua hai.
+
+Role-based redirect bana hua hai.
+
+Profile CRUD ka basic structure bana hua hai.
+
+Activity CRUD mein abhi index, show, create, store bana hua hai.
+
+Activities user-specific hain.
+
+Activity mein image upload bhi ho raha hai.
+
+Profile mein user_id ke through user ki profile linked hai.
+
+Profile ke liye requirement hai: 1 user = 1 profile.
+
+Profile first time create hogi, uske baad same profile edit/update hogi.
+
+updateOrCreate() use nahi karna; proper separate create/store aur edit/update flow samajhna hai.
+
+Activity multiple ho sakti hain, yani 1 user = many activities.
+
+Main ab basic CRUD se aage badhna chahta hoon.
+
+Production-level learning roadmap
+
+Hum ye concepts ek-ek karke seekhenge:
+
+Policies / Authorization
+
+Form Requests
+
+Route Model Binding + Authorization
+
+Eloquent Relationships
+
+Eager Loading / N+1 problem
+
+Pagination
+
+Production-level File Upload Handling
+
+Database Design + Foreign Keys + Unique Constraints + Indexes
+
+Database Transactions
+
+Service Classes / Business Logic
+
+API Resources
+
+Security best practices
+
+Queues / Jobs
+
+Events / Notifications
+
+Testing
+
+Caching / Performance
+
+Logging / Error Handling
+
+Production deployment concepts
+
+Teaching style
+
+Mujhe sab kuch ek-ek step mein sikhana.
+
+Ek baar mein bahut saare concepts mat dena.
+
+Har concept ke liye:
+
+Pehle simple language/Hinglish mein batao:
+
+ye kya hai
+
+kyu use hota hai
+
+production mein kya problem solve karta hai
+
+Phir mere existing project ke example se samjhao.
+
+Pehle current code dikhao aur batao usmein kya problem hai.
+
+Phir production-level solution dikhao.
+
+File-by-file batao:
+
+kaunsi file banegi
+
+kya code hoga
+
+existing code mein kya change hoga
+
+Code complete aur runnable hona chahiye.
+
+Har important line ka purpose samjhao.
+
+Mujhe unnecessarily advanced cheezon mein mat le jao jab tak current concept clear na ho.
+
+Ek concept complete hone ke baad mujhse check/short question karo ya next concept par jaane se pehle confirm karo.
+
+Important
+
+Mujhe sirf code copy-paste nahi karna hai. Mujhe samajhna hai ki Laravel production projects mein architecture aise kyu banaya jata hai.
+
+Ab hum sabse pehle Activity ke authorization ko Policy mein convert karenge, kyunki abhi mere controller mein manually:
+
+if ($activity->user_id !== auth()->id()) {
+    return view('activity.not-found');
+}
+
+
+likha hua hai.
+
+Pehle mujhe Laravel Policy properly samjhao, phir mere Activity model/controller/routes ke according implement karwao.
+
+Ek time par sirf ek major concept karna hai.
+
+
+*
+***
+*** IMPORTANT  REQUEST FLOW 
+***
+*
+
+HTTP Request
+    ↓
+Form Request
+    ↓
+Validation ❌ → STOP
+    ↓
+Validation ✅
+    ↓
+Controller
+    ↓
+Policy
+    ↓
+Service
+    ↓
+DB

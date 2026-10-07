@@ -2,14 +2,35 @@
 
 namespace App\Http\Controllers;
 
+use App\Http\Requests\StoreActivityRequest;
 use App\Models\Activity;
+use App\Services\ActivityService;
 use Illuminate\Http\Request;
 
 class ActivityController extends Controller
 {
+
+   public function __construct(private ActivityService $activityService) {
+
+    }
+
     public function index()
     {
-        // Sirf logged-in user ki activities nikal rahe hain
+        // OLD:
+        // Sirf logged-in user ki activities filter kar rahe the.
+        // Ye authorization check nahi tha.
+        //
+        // $activities = Activity::where('user_id', auth()->id())->get();
+
+
+        // NEW:
+        // ActivityPolicy ke viewAny() ko check karega.
+        // Matlab: kya current user Activity ki list dekh sakta hai?
+        $this->authorize('viewAny', Activity::class);
+
+
+        // Same old query:
+        // Sirf logged-in user ki activities
         $activities = Activity::where('user_id', auth()->id())->get();
 
         return view('activity.index', compact('activities'));
@@ -18,51 +39,40 @@ class ActivityController extends Controller
 
     public function show(Activity $activity)
     {
-        // Check kar rahe hain ki activity current logged-in user ki hai ya nahi
-        if ($activity->user_id !== auth()->id()) {
-            return view('activity.not-found');
-        }
+        // OLD:
+        // Manually check kar rahe the ki activity current user ki hai ya nahi.
+        //
+        // if ($activity->user_id !== auth()->id()) {
+        //     return view('activity.not-found');
+        // }
+
+
+        // NEW:
+        // Ab ye check ActivityPolicy ke view() method mein hoga.
+        // $activity = jis particular Activity ko check karna hai.
+        $this->authorize('view', $activity);
+
 
         return view('activity.show', compact('activity'));
     }
 
 
-    public function store(Request $request)
+    public function store(StoreActivityRequest $request)
     {
+        // NEW:
+        // ActivityPolicy ke create() method ko check karega.
+        // Matlab: kya current user new Activity create kar sakta hai?
+        $this->authorize('create', Activity::class);
+
+
         // Form se aane wale data ko validate kar rahe hain
-        $validated = $request->validate([
-            'activity_title' => 'required|string',
-            'activity_date' => 'required|date',
-            'location' => 'required|string',
-
-            // Actual uploaded image file
-            // image = image honi chahiye
-            // mimes = allowed extensions
-            // max:2048 = maximum 2MB
-            'image' => 'required|image|mimes:jpg,jpeg,png,webp|max:2048',
-        ]);
+        $validated = $request->validated();
 
 
-      
         $validated['user_id'] = auth()->id();
 
-
+         $this->activityService->create($validated);
       
-
-        $imagePath = $request->file('image')->store('activities', 'public');
-
-
-        // Database mein image ka path save karenge
-        $validated['image_url'] = $imagePath;
-
-
-        // 'image' database column nahi hai,
-        // isliye create karne se pehle array se hata rahe hain
-        unset($validated['image']);
-
-
-        // Activity database mein save
-        Activity::create($validated);
 
 
         // Activity list par redirect
@@ -74,6 +84,12 @@ class ActivityController extends Controller
 
     public function create()
     {
+        // NEW:
+        // ActivityPolicy ke create() method ko check karega.
+        // Matlab: kya current user Activity create karne ka form khol sakta hai?
+        $this->authorize('create', Activity::class);
+
+
         return view('activity.create');
     }
 }

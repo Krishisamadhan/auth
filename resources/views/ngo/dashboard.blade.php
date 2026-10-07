@@ -40,6 +40,11 @@
             Create Activity
         </a>
 
+         <a href="{{ route('profile.create') }}"
+           class="rounded-lg bg-red-600 px-5 py-3 text-white hover:bg-red-700">
+            Profile
+        </a>
+
     </div>
 
 </main>

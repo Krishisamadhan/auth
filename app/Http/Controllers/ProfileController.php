@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Http\Requests\ProfileRequest;
 use App\Models\Profile;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
@@ -11,6 +12,8 @@ class ProfileController extends Controller
     //
 public function index()
 {
+
+
     $profile = Profile::where('user_id', auth()->id())->first();
 
     return view('profile.index', compact('profile'));
@@ -27,27 +30,16 @@ public function index()
     }
 
 
-    public function store(Request $request)
+    public function store(ProfileRequest $request)
     {
-        $validated = $request->validate([
-            'state' => 'required', 
-            'district' => 'required',
-            'tehsil' => 'required',
-            'village' => 'required',
-            'panchayat' => 'required',
-            'pincode' => 'required|digits:6',
-
-            'mobile_no' => 'required|integer',
-            'address' => 'required',
-         'operation_level' => 'nullable|string',
-
-            'image' => 'required|image|mimes:jpg, jpeg,png,webp|max:2048'
-
-        ]);
+        $validated = $request->validated();
 
         $validated['user_id'] = auth()->id();
+        $this->authorize('view', Profile::class);
 
         $imagePath = $request->file('image')->store('profile', 'public');
+
+
 
 
         $validated['profile_url'] = $imagePath;

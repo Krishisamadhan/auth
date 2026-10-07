@@ -80,12 +80,32 @@
         @enderror
         <br>
 
-        <label>Operation Level</label>
-        <input type="text" name="operation_level" value="{{ old('operation_level') }}">
-        @error('operation_level')
-            <p>{{ $message }}</p>
-        @enderror
-        <br>
+       <label>Operation Level</label>
+
+<select name="operation_level">
+    <option value="">Select Operation Level</option>
+
+    <option value="village" {{ old('operation_level') == 'village' ? 'selected' : '' }}>
+        Village
+    </option>
+
+    <option value="block" {{ old('operation_level') == 'block' ? 'selected' : '' }}>
+        Block
+    </option>
+
+    <option value="district" {{ old('operation_level') == 'district' ? 'selected' : '' }}>
+        District
+    </option>
+
+    <option value="state" {{ old('operation_level') == 'state' ? 'selected' : '' }}>
+        State
+    </option>
+</select>
+
+@error('operation_level')
+    <p>{{ $message }}</p>
+@enderror
+
 
         <label>Profile Image</label>
         <input type="file" name="image">
