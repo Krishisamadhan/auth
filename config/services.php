@@ -35,4 +35,11 @@ return [
         ],
     ],
 
+
+    'ffmpeg' => [
+    'bin'   => env('FFMPEG_BIN', 'ffmpeg'),
+    'probe' => env('FFPROBE_BIN', 'ffprobe'),
+],
+
+
 ];

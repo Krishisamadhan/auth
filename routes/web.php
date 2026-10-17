@@ -3,6 +3,9 @@
 use App\Http\Controllers\ActivityController;
 use App\Http\Controllers\AuthController;
 use App\Http\Controllers\ProfileController;
+use App\Http\Controllers\VideoController;
+
+use App\Http\Controllers\Api\VideoApiController;
 use Illuminate\Support\Facades\Route;
 
 
@@ -118,3 +121,35 @@ Route::middleware('auth')->prefix('profile')->group(function () {
         ->name('profile.show');
 
 });
+
+
+
+
+Route::get('/phpinfo', function () {
+    return response()->view('phpinfo');
+});
+
+
+
+
+Route::get('/videos', [VideoController::class, 'index'])->name('videos.index');
+Route::post('/videos', [VideoController::class, 'store'])->name('videos.store');
+Route::get('/videos/{video}', [VideoController::class, 'show'])->name('videos.show');
+   Route::get('/videos/{video}/status', [VideoController::class, 'status'])->name('videos.status');
+   Route::get('/video-upload/status', [VideoController::class, 'chunkStatus'])->name('videos.chunk.status');
+Route::post('/video-upload/chunk', [VideoController::class, 'chunk'])->name('videos.chunk');
+Route::post('/video-upload/complete', [VideoController::class, 'complete'])->name('videos.complete');
+
+// external api 
+
+
+Route::get('/api/videos', [VideoApiController::class, 'index']);
+Route::get('/api/videos/{video}', [VideoApiController::class, 'show']);
+
+
+
+
+
+use App\Http\Controllers\ProjectController;
+
+Route::resource('project',ProjectController::class);
